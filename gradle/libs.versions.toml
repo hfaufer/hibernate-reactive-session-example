@@ -1,0 +1,14 @@
+[versions]
+hibernateORM = "7.2.5.Final"
+hibernateValidator = "8.0.3.Final"
+hibernateReactive = "4.2.5.Final"
+vertxPgClient = "5.0.8"
+expressly = "5.0.0"
+
+[libraries]
+hibernate-core = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernateORM" }
+hibernate-jpamodelgen = { module = "org.hibernate.orm:hibernate-jpamodelgen", version.ref = "hibernateORM" }
+hibernate-reactive = { module = "org.hibernate.reactive:hibernate-reactive-core", version.ref = "hibernateReactive" }
+hibernate-validator = { module = "org.hibernate.validator:hibernate-validator", version.ref = "hibernateValidator" }
+expressly = { module = "org.glassfish.expressly:expressly", version.ref = "expressly" }
+vertx-pg-client = { module = "io.vertx:vertx-pg-client", version.ref = "vertxPgClient" }
