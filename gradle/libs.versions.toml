@@ -12,3 +12,6 @@ hibernate-reactive = { module = "org.hibernate.reactive:hibernate-reactive-core"
 hibernate-validator = { module = "org.hibernate.validator:hibernate-validator", version.ref = "hibernateValidator" }
 expressly = { module = "org.glassfish.expressly:expressly", version.ref = "expressly" }
 vertx-pg-client = { module = "io.vertx:vertx-pg-client", version.ref = "vertxPgClient" }
+
+[plugins]
+hibernate-orm = { id = "org.hibernate.orm", version.ref = "hibernateORM" }

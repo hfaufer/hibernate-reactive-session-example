@@ -1,6 +1,9 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+
+    // Optional: Hibernate Gradle plugin to enable bytecode enhancements
+    alias(libs.plugins.hibernate.orm)
 }
 
 repositories {
@@ -18,6 +21,11 @@ dependencies {
 
     // JPA metamodel generation for criteria queries. (Those classes with the _ suffix.)
     annotationProcessor(libs.hibernate.jpamodelgen)
+}
+
+// enable the bytecode enhancements
+hibernate {
+    enhancement {}
 }
 
 testing {
