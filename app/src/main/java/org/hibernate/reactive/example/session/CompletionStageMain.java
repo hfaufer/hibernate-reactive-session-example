@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static jakarta.persistence.Persistence.createEntityManagerFactory;
 import static java.lang.System.out;
@@ -180,6 +181,30 @@ public class CompletionStageMain {
                                                     published.getYear()
                                             ))
                                     )
+                    )
+                    .toCompletableFuture().join();
+
+            // Create a BookShop and associate it with the Books.
+            final BookShop shop1 = new BookShop("The Old Bookshop");
+            shop1.getBooks().addAll(List.of(book1, book2, book3));
+            // Persist the BookShops in a transaction.
+            final BookShop mergedShop1 = factory.withTransaction( (session, _) -> session.merge(shop1) )
+                    .toCompletableFuture().join();
+            IO.println("Book shop 1 has ID " + mergedShop1.getId());
+
+            // Retrieve the BookShop and print its Books.
+            factory.withSession(
+                            session -> session.find(BookShop.class, mergedShop1.getId())
+                                    .thenAccept(shop -> {
+                                        IO.println(shop.getName() + " has " + shop.getBooks().size() + " books:");
+                                        shop.getBooks().forEach(book -> IO.println(" - " + book.getTitle()));
+                                    })
+                    )
+                    .toCompletableFuture().join();
+
+            factory.withTransaction(
+                            // Delete all the BookShops in a transaction.
+                            (session, _) -> session.createQuery("DELETE BookShop").executeUpdate()
                     )
                     .toCompletableFuture().join();
 

@@ -8,6 +8,7 @@
 
         <class>org.hibernate.reactive.example.session.Author</class>
         <class>org.hibernate.reactive.example.session.Book</class>
+        <class>org.hibernate.reactive.example.session.BookShop</class>
 
         <properties>
             <!-- PostgreSQL -->
