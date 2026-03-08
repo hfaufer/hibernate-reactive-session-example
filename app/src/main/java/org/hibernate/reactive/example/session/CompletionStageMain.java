@@ -122,6 +122,17 @@ public class CompletionStageMain {
                     .toCompletableFuture().join();
 
             factory.withSession(
+                            // Retrieve an Author by name.
+                            session -> session.createQuery("FROM Author WHERE name = :name", Author.class)
+                                    .setParameter("name", "Neal Stephenson")
+                                    .getSingleResult()
+                                    .thenAccept(author -> {
+                                        IO.println(author.getName() + " has ID " + author.getId());
+                                    })
+                    )
+                    .toCompletableFuture().join();
+
+            factory.withSession(
                             // Query the entire Book entities.
                             session -> session.createQuery(
                                             "FROM Book book JOIN FETCH book.author ORDER BY book.title DESC",
