@@ -59,6 +59,22 @@ public class CompletionStageMain {
                     .toCompletableFuture().join();
 
             factory.withSession(
+                            // Retrieve an Author.
+                            session -> session.find(Author.class, author1.getId())
+                                    // Print her/his name.
+                                    .thenApply(author -> {
+                                        IO.println(author.getName() + " is a great author!");
+                                        return author;
+                                    })
+                                    // Then print her/his books without explicitly fetching them first.
+                                    // This causes the following exception:
+                                    // "initialized: org.hibernate.reactive.example.session.Author.books
+                                    //   Fetch the collection using 'Mutiny.fetch', 'Stage.fetch', or 'fetch join' in HQL"
+                                    .thenAccept(author -> author.getBooks().forEach(book -> IO.println(" - " + book.getTitle())))
+                    )
+                    .toCompletableFuture().join();
+
+            factory.withSession(
                             // Retrieve both Authors at once.
                             session -> session.find(Author.class, author1.getId(), author2.getId())
                                     .thenAccept(authors -> authors.forEach(author -> IO.println(author.getName())))
