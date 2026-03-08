@@ -1,0 +1,22 @@
+---
+# See https://hub.docker.com/_/postgres/tags
+
+services:
+  postgres-18:
+    image: postgres:18.3-alpine3.23
+    container_name: postgres-18
+    hostname: postgres-18
+    restart: unless-stopped
+    stop_grace_period: 1m30s
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=hreact
+    ports:
+      - "127.0.0.1:18432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "--user", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
