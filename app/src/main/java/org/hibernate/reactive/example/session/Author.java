@@ -17,10 +17,7 @@ import java.util.List;
 import static jakarta.persistence.CascadeType.PERSIST;
 
 @Entity
-public class Author {
-    @Id
-    @GeneratedValue
-    private Integer id;
+public class Author extends BaseEntity {
     @NotNull
     @Size(max = 100)
     private String name;
@@ -32,10 +29,6 @@ public class Author {
 
     public Author(final String name) {
         this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getName() {

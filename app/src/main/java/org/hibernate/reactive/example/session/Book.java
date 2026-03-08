@@ -14,10 +14,7 @@ import java.time.LocalDate;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-public class Book {
-    @Id
-    @GeneratedValue
-    private Integer id;
+public class Book extends BaseEntity {
     @Size(min = 13, max = 13)
     private String isbn;
     @NotNull
@@ -42,10 +39,6 @@ public class Book {
         this.author = author;
         this.published = published;
         this.coverImage = ("Cover image for '" + title + "'").getBytes();
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getIsbn() {

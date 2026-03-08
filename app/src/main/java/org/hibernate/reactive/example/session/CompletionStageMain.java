@@ -54,7 +54,10 @@ public class CompletionStageMain {
                             // Retrieve a Book.
                             session -> session.find(Book.class, book1.getId())
                                     // Print its title.
-                                    .thenAccept(book -> IO.println(book.getTitle() + " is a great book!"))
+                                    .thenAccept(book -> {
+                                        IO.println(book.getTitle() + " is a great book!");
+                                        IO.println("   ID: " + book.getId() + ", version: " + book.getVersion());
+                                    })
                     )
                     .toCompletableFuture().join();
 
