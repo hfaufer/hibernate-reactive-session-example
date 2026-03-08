@@ -11,7 +11,7 @@
 
         <properties>
             <!-- PostgreSQL -->
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost/hreact"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:18432/hreact"/>
 
             <!-- Credentials -->
             <property name="jakarta.persistence.jdbc.user" value="postgres"/>
@@ -38,7 +38,7 @@
 
         <properties>
             <!-- MySQL -->
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost/hreact"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:18432/hreact"/>
 
             <!-- Credentials -->
             <property name="jakarta.persistence.jdbc.user" value="hreact"/>
