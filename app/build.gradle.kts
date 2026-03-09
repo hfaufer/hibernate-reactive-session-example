@@ -21,6 +21,9 @@ dependencies {
 
     // JPA metamodel generation for criteria queries. (Those classes with the _ suffix.)
     annotationProcessor(libs.hibernate.jpamodelgen)
+
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.bundles.testcontainers)
 }
 
 // enable the bytecode enhancements
