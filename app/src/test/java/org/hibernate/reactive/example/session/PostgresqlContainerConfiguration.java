@@ -8,10 +8,10 @@ public class PostgresqlContainerConfiguration {
 
     public PostgreSQLContainer<?> postgreSQLContainer() {
         final var postgres = new PostgreSQLContainer<>("postgres:18.3-alpine3.23")
-                .withDatabaseName("hr_demo")
+                .withDatabaseName("hreact")
                 .withUsername("postgres")
                 .withPassword("postgres");
-        postgres.setPortBindings(List.of("5439:5432"));
+        postgres.setPortBindings(List.of("18432:5432"));
         return postgres;
     }
 
