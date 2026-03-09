@@ -7,9 +7,12 @@ package org.hibernate.reactive.example.session;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
+import org.hibernate.reactive.stage.Stage;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletionStage;
 
 import static jakarta.persistence.Persistence.createEntityManagerFactory;
 import static java.lang.System.out;
@@ -50,6 +53,33 @@ public class CompletionStageMain {
                     )
                     // Wait for it to finish.
                     .toCompletableFuture().join();
+
+            // Rollback a transaction.
+            var titleOfDuplicateBook = "Copy of " + book1.getTitle();
+            try {
+                var author3 = new Author("William Gibson");
+                var duplicateBook = new Book(book1.getIsbn(), titleOfDuplicateBook, author3, book1.getPublished());
+                factory.withTransaction(
+                        (session, _) -> session.persist(author3)
+                                .thenCompose(_ -> session.persist(duplicateBook)))
+                        .toCompletableFuture().join();
+            } catch (RuntimeException e) {
+                IO.println("Exception: " + e.getMessage());
+            }
+            // Verify that "William Gibson" waw not persisted.
+            List<Author> copyCats = findAuthorsByName(factory, "William Gibson");
+            if (copyCats.isEmpty()) {
+                IO.println("OK: Author 'William Gibson' not found");
+            } else {
+                throw new IllegalStateException("Author 'William Gibson' should not have been persisted.");
+            }
+            // Verify that the duplicate book was not persisted.
+            List<Book> duplicates = findBooksByTitle(factory, titleOfDuplicateBook);
+            if (duplicates.isEmpty()) {
+                IO.println("OK: No duplicate books found");
+            } else {
+                throw new IllegalStateException("Duplicate books persisted.");
+            }
 
             factory.withSession(
                             // Retrieve a Book.
@@ -188,7 +218,7 @@ public class CompletionStageMain {
             final BookShop shop1 = new BookShop("The Old Bookshop");
             shop1.getBooks().addAll(List.of(book1, book2, book3));
             // Persist the BookShops in a transaction.
-            final BookShop mergedShop1 = factory.withTransaction( (session, _) -> session.merge(shop1) )
+            final BookShop mergedShop1 = factory.withTransaction((session, _) -> session.merge(shop1))
                     .toCompletableFuture().join();
             IO.println("Book shop 1 has ID " + mergedShop1.getId());
 
@@ -224,6 +254,22 @@ public class CompletionStageMain {
                     )
                     .toCompletableFuture().join();
         }
+    }
+
+    private List<Author> findAuthorsByName(SessionFactory factory, String name) {
+        return factory.withSession(session -> session.createQuery("FROM Author WHERE name = :name", Author.class)
+                        .setParameter("name", name)
+                        .getResultList())
+                .toCompletableFuture()
+                .join();
+    }
+
+    private List<Book> findBooksByTitle(SessionFactory factory, String title) {
+        return factory.withSession(session -> session.createQuery("FROM Book WHERE title = :title", Book.class)
+                        .setParameter("title", title)
+                        .getResultList())
+                .toCompletableFuture()
+                .join();
     }
 
     /**

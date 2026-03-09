@@ -15,7 +15,9 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 public class Book extends BaseEntity {
+    @NotNull
     @Size(min = 13, max = 13)
+    @Column(length = 13, unique = true)
     private String isbn;
     @NotNull
     @Size(max = 100)
